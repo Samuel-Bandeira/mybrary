@@ -1,10 +1,21 @@
 const express = require('express');
-const author = require('../models/author');
 const router = express.Router();
 const Author = require('../models/author');
 
-router.get('/', (req, res) => {
-    res.render('./authors/index');
+router.get('/', async (req, res) => {
+    let searchOptions = {};
+    if(req.query.name != null && req.query.name != "") {
+        searchOptions.name = new RegExp(req.query.name, 'i');
+    }
+    try {
+        const authors = await Author.find(searchOptions);
+        res.render('./authors/index', {
+            authors: authors,
+            searchOptions: req.query,
+        });
+    } catch {
+        res.redirect('/');
+    } 
 })
 
 router.get('/new', (req, res) => {
@@ -16,21 +27,15 @@ router.post('/', async (req, res) => {
         name: req.body.name,
     });
     try {
-        const newAuthor = await author.save();
-    } catch(error) {
-
+        const newAuthor = await newAuthor.save();
+        //res.redirect(`./authors/${newAut._id}`);
+        res.redirect('./authors');
+    } catch {
+        res.render('./authors/new', {
+            author: newAuthor, 
+            errorMessage: 'Error creating author',
+        });
     }
-    newAuthor.save((err, newAut) => {
-        if(err) {
-            res.render('./authors/new', {
-                author: newAuthor, 
-                errorMessage: 'Error creating author',
-            });
-        } else {
-            //res.redirect(`./authors/${newAut._id}`);
-            res.redirect('./authors');
-        }
-    })
 });
 
 module.exports = router;
