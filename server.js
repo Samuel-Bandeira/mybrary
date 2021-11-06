@@ -6,6 +6,8 @@ const PORT = process.env.PORT || 3000;
 const expressLayouts = require('express-ejs-layouts');
 const indexRoute = require('./routes/index');
 const mongoose = require('mongoose');
+const authorRoute = require('./routes/author');
+const bodyParser = require('body-parser');
 
 mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
@@ -21,8 +23,11 @@ app.set('views', __dirname + '/views');
 app.set('layout', 'layouts/layout');
 app.use(expressLayouts);
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 app.use('/', indexRoute);
+app.use('/authors', authorRoute);
 
 app.listen(PORT, () => {
     console.log(`connected on port ${PORT}`);
