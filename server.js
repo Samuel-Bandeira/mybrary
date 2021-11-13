@@ -1,5 +1,6 @@
 if(process.env.NODE_ENV !== 'production') 
     require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -7,6 +8,7 @@ const expressLayouts = require('express-ejs-layouts');
 const indexRoute = require('./routes/index');
 const mongoose = require('mongoose');
 const authorRoute = require('./routes/author');
+const bookRoute = require('./routes/book');
 const bodyParser = require('body-parser');
 
 mongoose.connect(process.env.DATABASE_URL, {
@@ -28,7 +30,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use('/', indexRoute);
 app.use('/authors', authorRoute);
-
+app.use('/books', bookRoute);
 app.listen(PORT, () => {
     console.log(`connected on port ${PORT}`);
 });

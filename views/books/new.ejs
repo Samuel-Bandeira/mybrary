@@ -1,0 +1,14 @@
+<form action="./books" method="POST">
+    <label for="">Title</label>
+    <input type="text" value=<%= book.name %>>
+    <label for="">Author</label>
+    <select name="author">
+        <% authors.map((author)) => { %>
+            <% if(author.id == book.author) {%>
+                <option selected label="<%= author.name %>" value="<%= author._id %>">
+            <% } else { %>
+                <option label="<%= author.name%>" value="<%= author._id%>">
+            <% }%>    
+        <% }%>
+    </select>
+</form>
