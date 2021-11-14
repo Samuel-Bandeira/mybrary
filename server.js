@@ -1,25 +1,26 @@
 if(process.env.NODE_ENV !== 'production') 
     require('dotenv').config();
 
+const expressLayouts = require('express-ejs-layouts');
+const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+
 const PORT = process.env.PORT || 3000;
-const expressLayouts = require('express-ejs-layouts');
+
 const indexRoute = require('./routes/index');
-const mongoose = require('mongoose');
 const authorRoute = require('./routes/author');
 const bookRoute = require('./routes/book');
-const bodyParser = require('body-parser');
 
 mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
 });
-
 const db = mongoose.connection;
 db.on('error', error => console.log(error));
 db.once('open', () => {
     console.log('connected to mongo');
 })
+
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.set('layout', 'layouts/layout');
@@ -31,6 +32,7 @@ app.use(express.urlencoded({extended: false}));
 app.use('/', indexRoute);
 app.use('/authors', authorRoute);
 app.use('/books', bookRoute);
+
 app.listen(PORT, () => {
     console.log(`connected on port ${PORT}`);
 });

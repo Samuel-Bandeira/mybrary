@@ -1,11 +1,14 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
+const path = require('path');
+
 const Book = require('../models/book');
 const Author = require('../models/author');
-const path = require('path');
-const uploadPath = path.Join('public', Book.coverImageBasePath);
+
+const uploadPath = path.join('public', Book.coverImageBasePath);
+
 const imageMimeTypes = ['images/jpeg', 'images/png', 'images/gif'];
-const multer = require('multer');
 const upload = multer({
     dest: uploadPath,
     fileFilter: (req, file, callback) => {
@@ -14,20 +17,11 @@ const upload = multer({
 });
 
 router.get('/', async (req, res) => {
-    
+    res.send('All Books');
 });
 
 router.get('/new', async (req, res) => {
-    try {
-        const authors = await Author.find({});
-        const book = new Book();
-        res.render('./books/new', {
-            authors: authors,
-            book: book,
-        });
-    } catch {
-        res.redirect('/books');
-    }
+    renderNewPage(res, new Book());
 });
 
 router.post('/', upload.single('cover'), async (req, res) => {
@@ -43,10 +37,27 @@ router.post('/', upload.single('cover'), async (req, res) => {
     });
 
     try {
-        res.redirect('/books');
+        const newBook = await book.save();
+        //res.redirect(`/books/${newBook._id}`);
+        res.redirect('/books'); 
     } catch {
-        res.redirect('/books/new')
+        renderNewPage(res, book, true);
     }
 });
+
+const renderNewPage = async (res, book, hasError = false) => {
+    try {
+        const authors = await Author.find({});
+        const params = {
+            authors: authors,
+            book: book,
+        }
+        if(hasError) params.errorMessage = 'Error Creating Book';
+
+        res.render('./books/new', params);
+    } catch {
+        res.redirect('/books');
+    }
+}
 
 module.exports = router;
