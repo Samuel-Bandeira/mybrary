@@ -14,7 +14,11 @@ const upload = multer({
 });
 
 router.get('/', async (req, res) => {
-    res.send('All Books');
+    const books = await Book.find({});
+    res.render('./books/index', {
+        books: books,
+        searchOptions: req.query,
+    });
 });
 
 router.get('/new', async (req, res) => {

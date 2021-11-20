@@ -1,0 +1,28 @@
+<h1>Search Book</h1>
+<form action="./books" method="GET">
+    <div>
+        <label>Title </label>
+        <input type="text" name="title" value="<%= searchOptions.title %>">
+    </div>
+    <div>
+        <label>Author</label>
+        <input type="text" name='author' value='<%= searchOptions.author %>'>
+    </div>
+    <div>
+        <label>Published After</label>
+        <input type="date" name="publishedAfter" value='<%= searchOptions.publishedAfter %>'>
+    </div>
+    <div>
+        <label>Published Before</label>
+        <input type="date" name="publishedBefore" value='<%= searchOptions.publishedBefore %>'>
+    </div>
+    <button type="submit">Search</button>
+    <a href="/">Cancel</a>
+</form>
+<div>
+    <% books.map(book => { %>
+        <p><%= book.title %></p>
+        <p>Cover</p>
+        <p><%= book.description %></p>
+    <% })%>
+</div>
