@@ -22,7 +22,7 @@
 <div>
     <% books.map(book => { %>
         <p><%= book.title %></p>
-        <p>Cover</p>
+        <img height='150' width='100' src="<%= book.imageBasePath %>" alt="">
         <p><%= book.description %></p>
     <% })%>
 </div>
