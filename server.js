@@ -5,6 +5,7 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+const methodOverride = require('method-override');
 
 const PORT = process.env.PORT || 3000;
 
@@ -28,7 +29,7 @@ app.use(expressLayouts);
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
+app.use(methodOverride('_method'));
 app.use('/', indexRoute);
 app.use('/authors', authorRoute);
 app.use('/books', bookRoute);

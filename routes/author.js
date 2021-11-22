@@ -16,11 +16,50 @@ router.get('/', async (req, res) => {
     } catch {
         res.redirect('/');
     } 
-})
+});
 
 router.get('/new', (req, res) => {
-    res.render('./authors/new', {author: new Author()});
-})
+    res.render('./authors/new', {
+        author: new Author()
+    });
+});
+
+router.get('/:id', async(req, res) => {
+    res.send(`author id: ${req.params.id}`);    
+});
+
+router.get('/:id/edit', async(req, res) => {
+    const author = await Author.findById(req.params.id);
+    try {
+        res.render('./authors/edit', {
+            author: author,
+        });
+    } catch {
+        res.redirect('/authors');
+    }    
+});
+
+router.put('/:id', async(req, res) => {
+    const author = await Author.findById(req.params.id);
+    try {
+        author.name = req.body.name;
+        await author.save();
+        res.redirect(`/authors/${author._id}`);
+    } catch {
+        if(author == null) {
+            res.redirect('/authors');
+        } else {
+            res.render(`./authors/edit`, {
+                errorMessage: 'Error Updating Author',
+                author: author,
+            })
+        }
+    }
+});
+
+router.delete('/:id', async(req, res) => {
+    res.send(`delete author of id: ${req.params.id}`)
+});
 
 router.post('/', async (req, res) => {
     const newAuthor = new Author({
