@@ -21,9 +21,6 @@
 </form>
 <div>
     <% books.map(book => { %>
-        <p><%= book.title %></p>
         <img height='150' width='100' src="<%= book.coverImagePath %>" alt="">
-        <p><%= book.description %></p>
-        <p><%= book.publishDate%></p>
     <% })%>
 </div>
