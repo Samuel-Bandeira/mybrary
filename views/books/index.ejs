@@ -1,5 +1,5 @@
 <h1>Search Book</h1>
-<form action="./books" method="GET">
+<form action="/books" method="GET">
     <div>
         <label>Title </label>
         <input type="text" name="title" value="<%= searchOptions.title %>">
@@ -22,7 +22,8 @@
 <div>
     <% books.map(book => { %>
         <p><%= book.title %></p>
-        <img height='150' width='100' src="<%= book.imageBasePath %>" alt="">
+        <img height='150' width='100' src="<%= book.coverImagePath %>" alt="">
         <p><%= book.description %></p>
+        <p><%= book.publishDate%></p>
     <% })%>
 </div>

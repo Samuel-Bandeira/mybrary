@@ -14,11 +14,25 @@ const upload = multer({
 });
 
 router.get('/', async (req, res) => {
-    const books = await Book.find({});
-    res.render('./books/index', {
-        books: books,
-        searchOptions: req.query,
-    });
+    let query = Book.find();
+    console.log(req.query);
+    
+    if(req.query.title != null && req.query.tile != '') 
+        query = query.regex('title', new RegExp(req.query.title, 'i'));
+    if(req.query.publishedBefore != null && req.query.publishedBefore != '') 
+        query = query.lte('publishDate', req.query.publishedBefore);
+    if(req.query.publishedAfter != null && req.query.publishedAfter != '') 
+        query = query.gte('publishDate', req.query.publishedAfter);
+
+    try {
+        const books = await query.exec();
+        res.render('./books/index', {
+            books: books,
+            searchOptions: req.query,
+        });
+    } catch {
+        res.redirect('/');
+    }
 });
 
 router.get('/new', async (req, res) => {
