@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const coverImageBasePath = 'uploads/bookCovers';
 const path = require('path');
+const Author = require('../models/author');
 const bookSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -35,8 +36,14 @@ const bookSchema = new mongoose.Schema({
 
 bookSchema.virtual('coverImagePath').get(function() {
     if(this.coverImageName != null ) {
-        return path.join('/', coverImageBasePath, this.coverImageName)
+        return path.join('/', coverImageBasePath, this.coverImageName);
     }   
+});
+
+bookSchema.virtual('authorName', function(callback) {
+    Author.findById(this.author, function (err, bookAuthor) {
+        callback(bookAuthor.name);
+    });
 });
 
 module.exports = mongoose.model("Book", bookSchema);
