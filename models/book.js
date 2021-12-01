@@ -40,11 +40,5 @@ bookSchema.virtual('coverImagePath').get(function() {
     }   
 });
 
-bookSchema.virtual('authorName', function(callback) {
-    Author.findById(this.author, function (err, bookAuthor) {
-        callback(bookAuthor.name);
-    });
-});
-
 module.exports = mongoose.model("Book", bookSchema);
 module.exports.coverImageBasePath = coverImageBasePath;
